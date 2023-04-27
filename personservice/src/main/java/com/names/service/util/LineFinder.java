@@ -6,17 +6,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 
 public class LineFinder {
 
-    private static String source = "/name-list.txt";
+    private static String resource = "/name-list.txt";
 
 
-    public static String findLineByName(String name) {
+    public static Optional<String> findLineByName(String name) {
 
         String line = null;
 
-        try (InputStream is = new ClassPathResource(source).getInputStream();
+        try (InputStream is = new ClassPathResource(resource).getInputStream();
              BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is))) {
 
             while ((line = bufferedReader.readLine()) != null) {
@@ -29,16 +30,16 @@ public class LineFinder {
             e.printStackTrace();
             line = null;
         }
-        return line;
+        return Optional.ofNullable(line);
     }
 
-    public static String findMaxAge() {
+    public static Optional<String> findMaxAge() {
 
         String line = null;
         String selectedLine = null;
         int max = -1;
 
-        try (InputStream is = new ClassPathResource(source).getInputStream();
+        try (InputStream is = new ClassPathResource(resource).getInputStream();
              BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is))) {
 
 
@@ -56,7 +57,7 @@ public class LineFinder {
             e.printStackTrace();
         }
 
-        return selectedLine;
+        return Optional.ofNullable(selectedLine);
 
     }
 }

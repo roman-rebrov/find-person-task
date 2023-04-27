@@ -10,6 +10,8 @@ import com.names.service.request.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -17,22 +19,24 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonRepository repository;
 
-
     @Override
     public Person getPersonByName(String name) {
 
         Person person = null;
+        String line = null;
 
-        String line = LineFinder.findLineByName(name);
+        Optional<String> result = LineFinder.findLineByName(name);
 
-        if (line == null) {
+        if (result.isEmpty()) {
 
+            final String params = "?name="  + name;
             final Request<Person> request = new Request<>(Person.class);
-            request.sendRequest(Request.AGIFY_IO_NAME_URL, name);
+            request.sendRequest(Request.AGIFY_IO_NAME_URL, params);
             person = request.fromJson();
 
         } else {
 
+            line = result.get();
             String[] separatedLine = line.split("_");
             int stat = repository.getStatisticByName(name);
             int age = Integer.parseInt(separatedLine[1]);
@@ -40,10 +44,10 @@ public class PersonServiceImpl implements PersonService {
 
         }
 
-        if(person == null){
+        if (person == null) {
             throw new ServerErrorException("Server error");
-        }else{
-            if (person.getAge() < 1){
+        } else {
+            if (person.getAge() < 1) {
                 int randomAge = MathHandlers.getRandom(1, 100);
                 person.setAge(randomAge);
                 int stat = repository.getStatisticByName(person.getName());
@@ -59,19 +63,23 @@ public class PersonServiceImpl implements PersonService {
 
 
         Person person = null;
-        String line = LineFinder.findMaxAge();
+        String line = null;
 
+        Optional<String> result = LineFinder.findMaxAge();
 
-        if (line != null) {
+        if (result.isEmpty()) {
 
-            String[] data = line.split("_");
-            String name = data[0];
-
-            int age = Integer.parseInt(data[1]);
-            int stat = repository.getStatisticByName(name);
-            person = new Person(name, age, stat);
+            // 404: Person is not found
 
         }
+
+        line = result.get();
+        String[] data = line.split("_");
+        String name = data[0];
+
+        int age = Integer.parseInt(data[1]);
+        int stat = repository.getStatisticByName(name);
+        person = new Person(name, age, stat);
 
         return person;
     }

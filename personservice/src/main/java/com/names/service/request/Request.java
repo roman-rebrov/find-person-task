@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class Request<T> {
 
-    public static final String AGIFY_IO_NAME_URL = "https://api.agify.io/?name=";
+    public static final String AGIFY_IO_NAME_URL = "https://api.agify.io/";
 
     private String data;
     private Class<T> tClass;
@@ -22,10 +22,10 @@ public class Request<T> {
         this.tClass = tClass;
     }
 
-    public boolean sendRequest(String url, String name) {
+    public boolean sendRequest(String url, String params) {
 
         final CloseableHttpClient client = HttpClients.createDefault();
-        final HttpUriRequest request = new HttpGet(url + name);
+        final HttpUriRequest request = new HttpGet(url + params);
 
         try (final CloseableHttpResponse response = client.execute(request);) {
 
