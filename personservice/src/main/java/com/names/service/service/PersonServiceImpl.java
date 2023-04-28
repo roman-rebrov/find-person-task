@@ -9,7 +9,6 @@ import com.names.service.request.Request;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 
@@ -66,12 +65,6 @@ public class PersonServiceImpl implements PersonService {
         String line = null;
 
         Optional<String> result = LineFinder.findMaxAge();
-
-        if (result.isEmpty()) {
-
-            // 404: Person is not found
-
-        }
 
         line = result.get();
         String[] data = line.split("_");

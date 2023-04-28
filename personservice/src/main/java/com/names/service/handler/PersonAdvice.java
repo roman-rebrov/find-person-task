@@ -1,6 +1,7 @@
 package com.names.service.handler;
 
 import com.names.service.exception.ServerErrorException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,6 +17,6 @@ public class PersonAdvice {
     public ResponseEntity<String> serverError(ServerErrorException ex) {
 
         this.logger.info(ex.toString());
-        return ResponseEntity.ok("Server error");
+        return new ResponseEntity("Server error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
